@@ -1,12 +1,5 @@
 import axios from 'axios';
-import { Search } from './settingsSearch';
-
-const options = {
-  key: '35105940-051708562a54e8fbc749fff56',
-  image_type: 'photo',
-  orientation: 'horizontal',
-  safesearch: true,
-};
+const KEY = '35105940-051708562a54e8fbc749fff56';
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -15,21 +8,20 @@ const refs = {
 };
 
 async function fetchData(value) {
-  return await axios.get(
-    `https://pixabay.com/api/?key=${options.key}&q=${value}`,
-    options
-  );
+  try {
+    return await axios.get(
+      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type="photo"&orientation="horizontal"&safesearch="true"`
+    );
+  } catch {
+    console.worn(new Error());
+  }
 }
 
 const handlerSubmit = evt => {
   evt.preventDefault();
-  console.log(evt);
-};
-
-async function fetchData(value) {
-  return await axios.get(
-    `https://pixabay.com/api/?key=${options.key}&q=${value}`
+  fetchData(evt.currentTarget.searchQuery.value).then(({ data }) =>
+    console.log(data.hits)
   );
-}
+};
 
 refs.form.addEventListener('submit', handlerSubmit);

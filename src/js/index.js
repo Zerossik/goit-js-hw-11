@@ -5,6 +5,7 @@ const refs = {
   form: document.querySelector('.search-form'),
   input: document.querySelector('.search-form__input'),
   btn: document.querySelector('.search-form__btn'),
+  galeryEl: document.querySelector('.gallery'),
 };
 
 async function fetchData(value) {
@@ -19,9 +20,33 @@ async function fetchData(value) {
 
 const handlerSubmit = evt => {
   evt.preventDefault();
-  fetchData(evt.currentTarget.searchQuery.value).then(({ data }) =>
-    console.log(data.hits)
-  );
+
+  fetchData(evt.currentTarget.searchQuery.value).then(({ data }) => {
+    data.hits.map(el => {
+      refs.galeryEl.insertAdjacentHTML('beforeend', markupCard(el));
+    });
+  });
 };
 
+function markupCard({ webformatURL, tags, likes, views, comments, downloads }) {
+  return `
+  <div class="photo-card">
+  <img src="${webformatURL}" alt="${tags}" loading="lazy" width="300px" />
+  <div class="info">
+    <p class="info-item">
+      <b>${likes}</b>
+    </p>
+    <p class="info-item">
+      <b>${views}</b>
+    </p>
+    <p class="info-item">
+      <b>${comments}</b>
+    </p>
+    <p class="info-item">
+      <b>${downloads}</b>
+    </p>
+  </div>
+</div>
+  `;
+}
 refs.form.addEventListener('submit', handlerSubmit);

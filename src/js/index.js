@@ -11,7 +11,7 @@ const refs = {
 async function fetchData(value) {
   try {
     return await axios.get(
-      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type="photo"&orientation="horizontal"&safesearch="true"`
+      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`
     );
   } catch {
     console.worn(new Error());
@@ -20,6 +20,7 @@ async function fetchData(value) {
 
 const handlerSubmit = evt => {
   evt.preventDefault();
+  refs.galeryEl.innerHTML = '';
 
   fetchData(evt.currentTarget.searchQuery.value).then(({ data }) => {
     data.hits.map(el => {
@@ -31,19 +32,23 @@ const handlerSubmit = evt => {
 function markupCard({ webformatURL, tags, likes, views, comments, downloads }) {
   return `
   <div class="photo-card">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" width="300px" />
+  <img src="${webformatURL}" alt="${tags}" loading="lazy" height="200px"/>
   <div class="info">
     <p class="info-item">
-      <b>${likes}</b>
+      <b>likes</b>
+      ${likes}
     </p>
     <p class="info-item">
-      <b>${views}</b>
+      <b>views</b>
+      ${views}
     </p>
     <p class="info-item">
-      <b>${comments}</b>
+      <b>comments</b>
+      ${comments}
     </p>
     <p class="info-item">
-      <b>${downloads}</b>
+      <b>downloads</b>
+      ${downloads}
     </p>
   </div>
 </div>

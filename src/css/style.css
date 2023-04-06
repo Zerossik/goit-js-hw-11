@@ -4,7 +4,7 @@
 .container {
   width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 30px 15px;
 }
 .header {
   padding: 10px;
@@ -42,4 +42,32 @@
   border-radius: 1px;
   cursor: pointer;
   height: 30px;
+}
+
+.gallery {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+img {
+  display: block;
+  width: 100%;
+}
+.photo-card {
+  width: calc((100% - 45px) / 4);
+}
+
+.info {
+  padding: 5px;
+
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid #eee;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+}
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

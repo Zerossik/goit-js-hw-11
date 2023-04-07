@@ -48,6 +48,7 @@
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+  margin-bottom: 30px;
 }
 img {
   display: block;
@@ -70,4 +71,17 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.hidden {
+  display: none;
+}
+.load-more {
+  padding: 5px 40px;
+  cursor: pointer;
+  background-color: #4056b4;
+  color: #fff;
+  border-radius: 4px;
+}
+.gallery-btn__wrap {
+  text-align: center;
 }

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Notify } from 'notiflix';
+
 const KEY = '35105940-051708562a54e8fbc749fff56';
 
 const refs = {
@@ -6,6 +8,7 @@ const refs = {
   input: document.querySelector('.search-form__input'),
   btn: document.querySelector('.search-form__btn'),
   galeryEl: document.querySelector('.gallery'),
+  loadMore: document.querySelector('.load-more'),
 };
 
 async function fetchData(value) {
@@ -21,12 +24,30 @@ async function fetchData(value) {
 const handlerSubmit = evt => {
   evt.preventDefault();
   refs.galeryEl.innerHTML = '';
+  refs.loadMore.classList.add('hidden');
 
-  fetchData(evt.currentTarget.searchQuery.value).then(({ data }) => {
-    data.hits.map(el => {
-      refs.galeryEl.insertAdjacentHTML('beforeend', markupCard(el));
+  fetchData(evt.currentTarget.searchQuery.value)
+    .then(({ data }) => {
+      if (data.hits.length === 0) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      } else if (data.hits.length > data.totalHits) {
+        Notify.failure(
+          `"We're sorry, but you've reached the end of search results."`
+        );
+      } else {
+        data.hits.map(el => {
+          refs.galeryEl.insertAdjacentHTML('afterbegin', markupCard(el));
+        });
+      }
+      return data;
+    })
+    .then(data => {
+      if (data.hits.length >= 1) {
+        refs.loadMore.classList.remove('hidden');
+      }
     });
-  });
 };
 
 function markupCard({ webformatURL, tags, likes, views, comments, downloads }) {

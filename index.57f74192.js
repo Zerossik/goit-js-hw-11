@@ -1,0 +1,2 @@
+function e(e){return e&&e.__esModule?e.default:e}var t={};Object.defineProperty(t,"__esModule",{value:!0}),t.default=function(e,t,a){t in e?Object.defineProperty(e,t,{value:a,enumerable:!0,configurable:!0,writable:!0}):e[t]=a;return e};const a=new class{get page(){return this.pages}set page(e){this.pages=e}constructor(a){e(t)(this,"pages",void 0),this.pages=a}}(1);console.log(a.page);
+//# sourceMappingURL=index.57f74192.js.map

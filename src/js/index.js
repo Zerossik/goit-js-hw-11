@@ -14,7 +14,7 @@ const refs = {
 async function fetchData(value) {
   try {
     return await axios.get(
-      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true`
+      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40`
     );
   } catch {
     console.worn(new Error());

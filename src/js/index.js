@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { Notify } from 'notiflix';
+import { Search } from './settingsSearch';
+const searchValue = new Search();
 
 const KEY = '35105940-051708562a54e8fbc749fff56';
-
+const PER_PAGE = 40;
 const refs = {
   form: document.querySelector('.search-form'),
   input: document.querySelector('.search-form__input'),
@@ -14,40 +16,40 @@ const refs = {
 async function fetchData(value) {
   try {
     return await axios.get(
-      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40`
+      `https://pixabay.com/api/?key=${KEY}&q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${PER_PAGE}&page=${searchValue.page}`
     );
   } catch {
-    console.worn(new Error());
+    throw new Error('invalid request');
   }
 }
 
 const handlerSubmit = evt => {
   evt.preventDefault();
+  searchValue.page = 1;
+  searchValue.q = evt.currentTarget.searchQuery.value;
+  searchValue.per_page = PER_PAGE;
   refs.galeryEl.innerHTML = '';
   refs.loadMore.classList.add('hidden');
 
-  fetchData(evt.currentTarget.searchQuery.value)
+  fetchData(searchValue.q)
     .then(({ data }) => {
       if (data.hits.length === 0) {
         Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
-      } else if (data.hits.length > data.totalHits) {
-        Notify.failure(
-          `"We're sorry, but you've reached the end of search results."`
-        );
-      } else {
-        data.hits.map(el => {
-          refs.galeryEl.insertAdjacentHTML('afterbegin', markupCard(el));
-        });
+        return;
       }
+      data.hits.map(el => {
+        refs.galeryEl.insertAdjacentHTML('afterbegin', markupCard(el));
+      });
       return data;
     })
     .then(data => {
-      if (data.hits.length >= 1) {
+      if (data.hits.length >= PER_PAGE) {
         refs.loadMore.classList.remove('hidden');
       }
-    });
+    })
+    .catch(() => console.warn('error! Invalid request'));
 };
 
 function markupCard({ webformatURL, tags, likes, views, comments, downloads }) {
@@ -75,4 +77,25 @@ function markupCard({ webformatURL, tags, likes, views, comments, downloads }) {
 </div>
   `;
 }
+
+function moreGalleryImg() {
+  searchValue.page += 1;
+
+  fetchData(searchValue.q)
+    .then(({ data }) => {
+      searchValue.per_page += data.hits.length;
+      if (data.hits.length < PER_PAGE) {
+        refs.loadMore.classList.add('hidden');
+      }
+      return data.hits.map(el => {
+        refs.galeryEl.insertAdjacentHTML('beforeend', markupCard(el));
+      });
+    })
+    .catch(() => {
+      Notify.failure(
+        `"We're sorry, but you've reached the end of search results."`
+      );
+    });
+}
 refs.form.addEventListener('submit', handlerSubmit);
+refs.loadMore.addEventListener('click', moreGalleryImg);

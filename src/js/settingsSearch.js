@@ -1,8 +1,8 @@
-const count = 1;
-
-class Search {
+export class Search {
   pages;
-  constructor(value) {
+  q = null;
+  per_page;
+  constructor(value = 1) {
     this.pages = value;
   }
   get page() {
@@ -13,6 +13,5 @@ class Search {
     this.pages = newValue;
   }
 }
-const loadMore = new Search(count);
-// loadMore.page += 1;
-console.log(loadMore.page);
+
+// console.log(loadMore.page);
